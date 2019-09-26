@@ -467,6 +467,39 @@ Maze.init = function() {
 
   BlocklyInterface.init();
 
+    // initial score
+    if(window.localStorage.getItem("score")){
+        Maze.SCORE = parseInt(window.localStorage.getItem("score"), 10);
+    }else {
+        Maze.SCORE = 1000;
+    }
+
+    document.getElementById('score').innerHTML = Maze.SCORE;
+    window.localStorage.setItem("score", Maze.SCORE);
+
+    //initial noOfTries
+    var tryKey = "try" + BlocklyGames.LEVEL;
+    if(window.localStorage.getItem(tryKey)){
+        Maze.NO_OF_TRIES = parseInt(window.localStorage.getItem(tryKey), 10);
+    }else {
+        Maze.NO_OF_TRIES = 0;
+    }
+
+    // document.getElementById('noOfTries').innerHTML = Maze.NO_OF_TRIES;
+    window.localStorage.setItem(tryKey, Maze.NO_OF_TRIES);
+
+    var sum = 0;
+    for(var i=1; i<=10; i++){
+        var indeks = "try" + i;
+        if(window.localStorage.getItem(indeks)){
+            sum = sum + parseInt(window.localStorage.getItem(indeks));
+        }
+    }
+
+    Maze.TOTAL_TRIES = sum;
+    window.localStorage.setItem("total", Maze.TOTAL_TRIES);
+    // document.getElementById('total').innerHTML = Maze.TOTAL_TRIES;
+
   // Setup the Pegman menu.
   var pegmanImg = document.querySelector('#pegmanButton>img');
   pegmanImg.style.backgroundImage = 'url(' + Maze.SKIN.sprite + ')';
@@ -976,6 +1009,14 @@ Maze.resetButtonClick = function(e) {
   runButton.style.display = 'inline';
   document.getElementById('resetButton').style.display = 'none';
   BlocklyGames.workspace.highlightBlock(null);
+
+    if(!BlocklyGames.loadFromLocalStorage(BlocklyGames.NAME, BlocklyGames.LEVEL)){
+        Maze.SCORE = Maze.SCORE - 100;
+    }
+
+    document.getElementById('score').innerHTML = Maze.SCORE;
+    window.localStorage.setItem("score", Maze.SCORE);
+
   Maze.reset(false);
   Maze.levelHelp();
 };
@@ -1067,6 +1108,34 @@ Maze.execute = function() {
     }
     Maze.result = Maze.notDone() ?
         Maze.ResultType.FAILURE : Maze.ResultType.SUCCESS;
+
+      if(Maze.result === Maze.ResultType.SUCCESS && !BlocklyGames.loadFromLocalStorage(BlocklyGames.NAME, BlocklyGames.LEVEL)){
+          Maze.SCORE = Maze.SCORE + 300;
+      }
+
+      document.getElementById('score').innerHTML = Maze.SCORE;
+      window.localStorage.setItem("score", Maze.SCORE);
+
+      var tryKey = "try" + BlocklyGames.LEVEL;
+      if(!BlocklyGames.loadFromLocalStorage(BlocklyGames.NAME, BlocklyGames.LEVEL)){
+          Maze.NO_OF_TRIES = Maze.NO_OF_TRIES + 1;
+      }
+
+      // document.getElementById('noOfTries').innerHTML = Maze.NO_OF_TRIES;
+      window.localStorage.setItem(tryKey, Maze.NO_OF_TRIES);
+
+      var sum = 0;
+      for(var i=1; i<=10; i++){
+          var indeks = "try" + i;
+          if(window.localStorage.getItem(indeks)){
+              sum = sum + parseInt(window.localStorage.getItem(indeks));
+          }
+      }
+
+      Maze.TOTAL_TRIES = sum;
+      window.localStorage.setItem("total", Maze.TOTAL_TRIES);
+      // document.getElementById('total').innerHTML = Maze.TOTAL_TRIES;
+
   } catch (e) {
     // A boolean is thrown for normal termination.
     // Abnormal termination is a user error.

@@ -80,11 +80,6 @@
  */
 {template .titleSpan private="true"}
   <span id="title">
-    {if $ij.html}
-      <a href="index.html?lang={$ij.lang}">
-    {else}
-      <a href="./?lang={$ij.lang}">
-    {/if}
       {msg meaning="Games.name" desc="IBID"}Blockly Games{/msg}
     </a>
     {sp}:{sp}
@@ -148,13 +143,10 @@
 {template .abortDialog private="true"}
   <div id="dialogAbort" class="dialogHiddenContent">
     {msg meaning="Games.helpAbort" desc="callout - This dialog gives the user the option to skip this level."}
-      This level is extremely difficult. Would you like to skip it and go onto the next game? You can always come back later.
+        This level is extremely difficult. But don't give up! You can do it!
     {/msg}
     <div class="farSide" style="padding: 1ex 3ex 0">
       <button id="abortCancel">
-        {{msg meaning="Games.dialogCancel" desc="IBID"}}Cancel{{/msg}}
-      </button>
-      <button id="abortOk" class="secondary">
         {{msg meaning="Games.dialogOk" desc="IBID"}}OK{{/msg}}
       </button>
     </div>
